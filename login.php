@@ -1,3 +1,8 @@
+<?php
+session_start();
+error_reporting(0);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +77,7 @@ body{
 
 <div class="row g-0">
 
-<!-- Left Side -->
+<!-- Left Panel -->
 
 <div class="col-md-6 left-panel">
 
@@ -90,12 +95,30 @@ Student Management System
 
 </div>
 
-<form action="login_check.php" method="POST">
+<!-- Error Message -->
+
+<?php
+if(isset($_SESSION['loginMessage']))
+{
+?>
+    <div class="alert alert-danger text-center">
+        <?php
+        echo $_SESSION['loginMessage'];
+        unset($_SESSION['loginMessage']);
+        ?>
+    </div>
+<?php
+}
+?>
+
+<!-- Login Form -->
+
+<form action="login_check.php" method="POST" autocomplete="off">
 
 <div class="mb-3">
 
 <label class="form-label">
-Username 
+Username
 </label>
 
 <input type="text"
@@ -123,13 +146,8 @@ required>
 <div class="d-flex justify-content-between mb-3">
 
 <div>
-
 <input type="checkbox">
-
-<label>
-Remember Me
-</label>
-
+<label>Remember Me</label>
 </div>
 
 <a href="#" class="text-decoration-none">
@@ -142,7 +160,7 @@ Forgot Password?
 class="btn btn-primary w-100 btn-login">
 
 <i class="bi bi-box-arrow-in-right"></i>
-Login
+ Login
 
 </button>
 
@@ -153,9 +171,7 @@ Don't have an account?
 
 <a href="register.php"
 class="text-decoration-none fw-bold">
-
 Register Here
-
 </a>
 
 </p>
@@ -166,7 +182,7 @@ Register Here
 
 </div>
 
-<!-- Right Side -->
+<!-- Right Panel -->
 
 <div class="col-md-6 right-panel">
 
@@ -186,7 +202,8 @@ through EduCore.
 
 <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png"
 class="img-fluid mt-4"
-style="max-height:250px;">
+style="max-height:250px;"
+alt="Student">
 
 </div>
 
