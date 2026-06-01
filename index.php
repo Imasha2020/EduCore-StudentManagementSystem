@@ -227,7 +227,7 @@
 
                                 <!-- Submit Button -->
                                 <div class="col-12 mt-4">
-                                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-sm">
+                    s                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-pill shadow-sm" name="apply">
                                         <i class="bi bi-send-fill me-2"></i> Apply Now
                                     </button>
                                 </div>
