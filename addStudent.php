@@ -2,6 +2,12 @@
 // 1. Include Global Structural Elements, Authentication & Role Checks
 include 'header.php'; 
 
+// Enforce strict administrative layer protection
+if(!isset($_SESSION['username']) || $_SESSION['usertype'] !== 'admin') {
+    header("Location: login.php");
+    exit();
+}
+
 // 2. Process Post Request Payload Form Submissions Safely
 $message_status = "";
 $message_class = "";
@@ -10,19 +16,24 @@ if (isset($_POST['add_student'])) {
     $student_user = mysqli_real_escape_string($data, trim($_POST['username']));
     $student_email = mysqli_real_escape_string($data, trim($_POST['email']));
     $student_phone = mysqli_real_escape_string($data, trim($_POST['phone']));
-    $student_pass = $_POST['password']; 
+    $student_pass = trim($_POST['password']); 
     
     // Check if user credentials conflict with existing records
-    $check_query = "SELECT * FROM user WHERE username = '$student_user' OR email = '$student_email'";
+    $check_query = "SELECT * FROM user WHERE username = '$student_user' OR email = '$student_email' LIMIT 1";
     $check_result = mysqli_query($data, $check_query);
     
     if (mysqli_num_rows($check_result) > 0) {
         $message_status = "Error: Username or Email already exists in the system.";
         $message_class = "alert-danger";
     } else {
-        // Secure password string before saving
-        $hashed_password = password_hash($student_pass, PASSWORD_DEFAULT);
-        $insert_query = "INSERT INTO user (username, phone, email, usertype, password) VALUES ('$student_user', '$student_phone', '$student_email', 'student', '$hashed_password')";
+        // OPTION A: If using standard text matching on your server (Matches your early login infrastructure)
+        $secured_password = mysqli_real_escape_string($data, $student_pass);
+        
+        // OPTION B: If you prefer modern BCRYPT security, uncomment the line below:
+        // $secured_password = password_hash($student_pass, PASSWORD_DEFAULT);
+        
+        $insert_query = "INSERT INTO user (username, phone, email, usertype, password) 
+                         VALUES ('$student_user', '$student_phone', '$student_email', 'student', '$secured_password')";
         
         if (mysqli_query($data, $insert_query)) {
             $message_status = "Success: Student account has been created successfully.";
@@ -107,24 +118,25 @@ include 'sidebar.php';
     }
 </style>
 
-<div class="col-md-9 ms-sm-auto col-lg-10 main-content">
+<div class="col-md-9 ms-sm-auto col-lg-10 main-content px-md-4" style="padding-top: 24px;">
     
-    <div class="page-title-box d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2 mb-4">
+    <div class="page-title-box d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
         <div>
             <h4 class="fw-bold text-dark mb-1">Add Student</h4>
             <p class="text-muted small mb-0">Create a new student profile record</p>
         </div>
         <div>
-            <a href="view_admissions.php" class="btn btn-sm btn-outline-secondary px-3">
+            <a href="view_admissions.php" class="btn btn-sm btn-outline-secondary px-3 rounded-2">
                 <i class="bi bi-arrow-left me-1"></i> Back to List
             </a>
         </div>
     </div>
 
     <?php if(!empty($message_status)): ?>
-        <div class="alert <?php echo $message_class; ?> alert-dismissible fade show border-0 rounded-2 p-3 mb-4" role="alert">
+        <div class="alert <?php echo $message_class; ?> alert-dismissible fade show border-0 rounded-3 p-3 mb-4" role="alert">
             <div class="d-flex align-items-center gap-2">
-                <span class="small fw-medium"><?php echo $message_status; ?></span>
+                <i class="bi <?php echo ($message_class == 'alert-success') ? 'bi-check-circle-fill text-success' : 'bi-exclamation-triangle-fill text-danger'; ?> fs-5"></i>
+                <span class="small fw-medium text-dark"><?php echo $message_status; ?></span>
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -166,9 +178,9 @@ include 'sidebar.php';
                         </div>
 
                         <div class="col-12 d-flex justify-content-end gap-2 mt-3">
-                            <button type="reset" class="btn btn-light px-4 text-secondary" style="font-size: 0.92rem; border: 1px solid #e2e8f0;">Clear Form</button>
-                            <button type="submit" name="add_student" class="btn btn-submit-clean px-4">
-                                Save Student Record
+                            <button type="reset" class="btn btn-light px-4 text-secondary rounded-2" style="font-size: 0.92rem; border: 1px solid #e2e8f0;">Clear Form</button>
+                            <button type="submit" name="add_student" class="btn btn-submit-clean px-4 rounded-2">
+                                <i class="bi bi-person-plus-fill me-1"></i> Save Student Record
                             </button>
                         </div>
 
