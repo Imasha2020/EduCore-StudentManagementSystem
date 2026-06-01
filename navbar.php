@@ -11,7 +11,7 @@
 
         <div class="d-none d-lg-flex align-items-center">
             <span class="text-muted me-3">
-                <i class="bi bi-person-badge-fill text-primary me-1"></i> Security Context: <strong class="text-dark"><?php echo htmlspecialchars($_SESSION['username']); ?></strong>
+                <i class="bi bi-person-badge-fill text-primary me-1"></i> Security Context: <strong class="text-dark"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Guest'); ?></strong>
             </span>
             <a href="logout.php" class="btn btn-outline-danger btn-sm px-4 rounded-pill fw-medium">
                 <i class="bi bi-box-arrow-right me-1"></i> Logout
