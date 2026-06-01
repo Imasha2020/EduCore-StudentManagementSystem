@@ -17,7 +17,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="addStudent.php" class="<?php echo ($current_page == 'addStudent.php') ? 'active' : ''; ?>">
             <i class="bi bi-person-plus-fill"></i> Add Student
         </a>
-        <a href="viewStudents.php" class="<?php echo ($current_page == 'viewStudents.php') ? 'active' : ''; ?>">
+        <a href="view_students.php" class="<?php echo ($current_page == 'view_students.php') ? 'active' : ''; ?>">
             <i class="bi bi-people-fill"></i> View Students
         </a>
         <a href="addTeacher.php" class="<?php echo ($current_page == 'addTeacher.php') ? 'active' : ''; ?>">
